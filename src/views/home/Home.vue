@@ -1,26 +1,22 @@
 <template>
     <div class="home">
-        <h2>home</h2>
-
-        <van-button type="primary">主要按钮</van-button>
-        <van-button type="success">成功按钮</van-button>
-        <van-button type="default">默认按钮</van-button>
-        <van-button type="warning">警告按钮</van-button>
-        <van-button type="danger">危险按钮</van-button>
-
-        <van-rate v-model="rateValue" :size="30" color="#0ff00f" />
-        <button @click="rateIncrement">评分+1</button>
+        <home-nav-bar />
+        <div class="banner">
+            <img src="@/assets/img/home/banner.webp" alt="" />
+        </div>
+        <home-search-box />
     </div>
 </template>
 
 <script setup>
-import { ref } from "vue"
-
-const rateValue = ref(4.6)
-
-const rateIncrement = () => {
-    rateValue.value++
-}
+import HomeNavBar from "./components/home-nav-bar.vue"
+import HomeSearchBox from "./components/home-search-box.vue"
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.banner {
+    img {
+        width: 100%;
+    }
+}
+</style>
