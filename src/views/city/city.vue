@@ -1,28 +1,40 @@
 <template>
     <div class="city top-page">
-        <!-- 1.搜索框 -->
-        <van-search
-            v-model="searchValue"
-            shape="round"
-            placeholder="请输入关键词"
-            show-action
-            @cancel="cancelClick"
-        />
+        <div class="top">
+            <!-- 1.搜索框 -->
+            <van-search
+                v-model="searchValue"
+                shape="round"
+                placeholder="请输入关键词"
+                show-action
+                @cancel="cancelClick"
+            />
 
-        <!-- 2.城市Tab栏 -->
-        <van-tabs v-model:active="tabActive" color="#ff9854">
+            <!-- 2.城市Tab栏 -->
+            <van-tabs v-model:active="tabActive" color="#ff9854">
+                <template v-for="(value, key, index) in allCities" :key="key">
+                    <van-tab :title="value.title" :name="key"></van-tab>
+                </template>
+            </van-tabs>
+        </div>
+
+        <div class="content">
+            <!-- <city-group :group-data="currentGroup" /> -->
             <template v-for="(value, key, index) in allCities" :key="key">
-                <van-tab :title="value.title" :name="key"></van-tab>
+                <!-- <h2 v-show="tabActive === key">{{ value.title }}</h2> -->
+                <city-group v-show="tabActive === key" :group-data="value" />
             </template>
-        </van-tabs>
+        </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import { storeToRefs } from "pinia"
 import { useRouter } from "vue-router"
 import useCityStore from "@/stores/modules/city"
+
+import CityGroup from "./components/city-group.vue"
 
 const router = useRouter()
 
@@ -50,6 +62,11 @@ const tabActive = ref()
 const cityStore = useCityStore()
 cityStore.fetchAllCitiesData()
 const { allCities } = storeToRefs(cityStore)
+
+// 目的: 获取选中标签后的数据
+// 1.获取正确的key: 将tabs中绑定的tabAction正确绑定
+// 2.根据key从allCities获取数据, 默认直接获取的数据不是响应式的, 所以必须包裹computed
+const currentGroup = computed(() => allCities.value[tabActive.value])
 </script>
 
 <style lang="less" scoped>
