@@ -1,13 +1,9 @@
 <template>
-  <div class="order">
-    <h2>order</h2>
-  </div>
+    <div class="order">
+        <h2>order</h2>
+    </div>
 </template>
 
-<script setup>
+<script setup></script>
 
-</script>
-
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

@@ -1,7 +1,7 @@
-import hyRequest from '../request'
+import EtcRequest from "../request"
 
 export function getCityAll() {
-  return hyRequest.get({
-    url: "/city/all"
-  })
+    return EtcRequest.get({
+        url: "/city/all",
+    })
 }
