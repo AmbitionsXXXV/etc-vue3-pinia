@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="home" ref="homeRef">
         <home-nav-bar />
         <div class="banner">
             <img src="@/assets/img/home/banner.webp" alt="" />
@@ -15,8 +15,11 @@
     </div>
 </template>
 
+<script>
+export default { name: "home" }
+</script>
 <script setup>
-import { ref, watch } from "vue"
+import { onActivated, ref, watch } from "vue"
 import useHomeStore from "@/stores/modules/home"
 import HomeNavBar from "./cpns/home-nav-bar.vue"
 import HomeSearchBox from "./cpns/home-search-box.vue"
@@ -33,36 +36,9 @@ homeStore.fetchHotSuggestData()
 homeStore.fetchCategoriesData()
 homeStore.fetchHouselistData()
 
-// 默认加载更多
-// const moreBtnClick = () => {
-//   console.log("加载更多的数据")
-//   homeStore.fetchHouselistData()
-// }
-
-// 监听window窗口的滚动
-// 1.当我们离开页面时, 我们移除监听
-// 2.如果别的页面也进行类似的监听, 会编写重复代码
-// const scrollListenerHandler = () => {
-//   const clientHeight = document.documentElement.clientHeight
-//   const scrollTop = document.documentElement.scrollTop
-//   const scrollHeight = document.documentElement.scrollHeight
-//   if (clientHeight + scrollTop >= scrollHeight) {
-//     homeStore.fetchHouselistData()
-//   }
-// }
-
-// onMounted(() => {
-//   window.addEventListener("scroll", scrollListenerHandler)
-// })
-
-// onUnmounted(() => {
-//   window.removeEventListener("scroll", scrollListenerHandler)
-// })
-
-// useScroll(() => {
-//   homeStore.fetchHouselistData()
-// })
-const { isReachBottom, scrollTop } = useScroll()
+// 监听滚动到底部
+const homeRef = ref()
+const { isReachBottom, scrollTop } = useScroll(homeRef)
 watch(isReachBottom, (newValue) => {
     if (newValue) {
         homeStore.fetchHouselistData().then(() => {
@@ -80,10 +56,20 @@ watch(isReachBottom, (newValue) => {
 const isShowSearchBar = computed(() => {
     return scrollTop.value >= 360
 })
+
+// 跳转回home时, 保留原来的位置
+onActivated(() => {
+    homeRef.value?.scrollTo({
+        top: scrollTop.value,
+    })
+})
 </script>
 
 <style lang="less" scoped>
 .home {
+    height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
     padding-bottom: 60px;
 }
 
